@@ -1,0 +1,73 @@
+{
+  "name": "provisoes-sci",
+  "version": "1.0.1",
+  "description": "Programa desktop para gerar TXT SCI de provisoes",
+  "author": "Rayssa",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "desktop": "npm.cmd run build && electron .",
+    "desktop:prod": "npm.cmd run build && electron .",
+    "pack:win": "npm.cmd run build && electron-builder --win nsis --x64",
+    "release:win": "npm.cmd run build && electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "electron-updater": "^6.3.9",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwind-merge": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.2.1",
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "wait-on": "^9.0.10"
+  },
+  "build": {
+    "appId": "com.provisoes.sci",
+    "productName": "Provisoes SCI",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "Provisoes-SCI-Setup-${version}.exe"
+    },
+    "forceCodeSigning": false,
+    "publish": {
+      "provider": "github",
+      "owner": "rayssamayarax",
+      "repo": "provisoes-sci"
+    }
+  }
+}

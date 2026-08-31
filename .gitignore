@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Node / frontend build
+frontend/node_modules/
+frontend/dist/
+frontend/release/
+frontend/*.tsbuildinfo
+
+# Packaged desktop apps (build artifacts, not source)
+/Provisoes SCI.exe
+/Provisoes SCI/
+
+# Misc
+*.log
+*.lnk
