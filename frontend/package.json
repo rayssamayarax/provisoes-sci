@@ -1,7 +1,7 @@
 {
-  "name": "provisoes-sci",
-  "version": "1.0.2",
-  "description": "Programa desktop para gerar TXT SCI de provisoes",
+  "name": "contaflow",
+  "version": "1.0.3",
+  "description": "ContaFlow - programa desktop para gerar TXT SCI de provisoes",
   "author": "Rayssa",
   "main": "electron/main.cjs",
   "scripts": {
@@ -39,8 +39,8 @@
     "wait-on": "^9.0.10"
   },
   "build": {
-    "appId": "com.provisoes.sci",
-    "productName": "Provisoes SCI",
+    "appId": "com.contaflow.app",
+    "productName": "ContaFlow",
     "directories": {
       "output": "release"
     },
@@ -64,7 +64,7 @@
       "createStartMenuShortcut": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
-      "artifactName": "Provisoes-SCI-Setup-${version}.exe"
+      "artifactName": "ContaFlow-Setup-${version}.exe"
     },
     "forceCodeSigning": false,
     "publish": {

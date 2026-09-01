@@ -18,7 +18,7 @@ function setupAutoUpdater() {
       .showMessageBox({
         type: "info",
         title: "Atualizacao disponivel",
-        message: "Uma nova versao do Provisoes SCI foi baixada.",
+        message: "Uma nova versao do ContaFlow foi baixada.",
         detail: "Reinicie o programa agora para instalar a atualizacao?",
         buttons: ["Reiniciar agora", "Depois"],
         defaultId: 0,
@@ -42,7 +42,7 @@ function createWindow() {
     height: 820,
     minWidth: 1080,
     minHeight: 700,
-    title: "Provisoes SCI",
+    title: "ContaFlow",
     icon: path.join(__dirname, "..", isDev ? "public" : "dist", "icon.ico"),
     backgroundColor: "#f4f7fb",
     autoHideMenuBar: true,

@@ -153,7 +153,7 @@ function Sidebar({ current, setCurrent }: { current: StepId; setCurrent: (step: 
             <FileSpreadsheet className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-sm font-bold">Provisoes SCI</div>
+            <div className="text-sm font-bold">ContaFlow</div>
             <div className="text-xs text-slate-400">Importador contabil</div>
           </div>
         </div>
