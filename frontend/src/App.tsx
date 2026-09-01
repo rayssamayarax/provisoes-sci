@@ -14,7 +14,9 @@ import {
   RefreshCw,
   Search,
   Settings2,
+  Trash2,
   Upload,
+  X,
 } from "lucide-react";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
@@ -177,7 +179,15 @@ function Sidebar({ current, setCurrent }: { current: StepId; setCurrent: (step: 
         })}
       </nav>
       <div className="mt-auto border-t border-slate-800 p-4 text-xs text-slate-400">
-        Desktop em desenvolvimento. Leitura real sera conectada na proxima etapa.
+        Desenvolvido por Rayssa ·{" "}
+        <a
+          href="https://github.com/rayssamayarax/provisoes-sci"
+          target="_blank"
+          rel="noreferrer"
+          className="text-teal-400 underline hover:text-teal-300"
+        >
+          GitHub
+        </a>
       </div>
     </aside>
   );
@@ -251,14 +261,24 @@ function ErrorAlert({ errors }: { errors: number }) {
   );
 }
 
-function FileSettings({ files, setFiles }: { files: SheetFile[]; setFiles: (files: SheetFile[]) => void }) {
+function FileSettings({ files, setFiles, onRemove }: { files: SheetFile[]; setFiles: (files: SheetFile[]) => void; onRemove?: (id: string) => void }) {
   const update = (id: string, field: keyof SheetFile, value: string) => setFiles(files.map((file) => file.id === id ? { ...file, [field]: value } : file));
   return (
     <div className="space-y-4">
       {files.map((file) => (
         <Card key={file.id}>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between"><span>{file.name}</span><span className="text-xs font-medium text-slate-500">{file.type.toUpperCase()} - {fileSize(file.size)}</span></CardTitle>
+            <CardTitle className="flex items-center justify-between">
+              <span>{file.name}</span>
+              <span className="flex items-center gap-3">
+                <span className="text-xs font-medium text-slate-500">{file.type.toUpperCase()} - {fileSize(file.size)}</span>
+                {onRemove && (
+                  <Button variant="ghost" size="sm" onClick={() => onRemove(file.id)} title="Excluir planilha">
+                    <Trash2 className="h-4 w-4 text-red-600" />
+                  </Button>
+                )}
+              </span>
+            </CardTitle>
             <CardDescription>Configuracao individual desta planilha para separar os lancamentos no TXT.</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -273,14 +293,14 @@ function FileSettings({ files, setFiles }: { files: SheetFile[]; setFiles: (file
   );
 }
 
-function MappingColumns({ files, setFiles }: { files: SheetFile[]; setFiles: (files: SheetFile[]) => void }) {
+function MappingColumns({ files, setFiles, onRemove }: { files: SheetFile[]; setFiles: (files: SheetFile[]) => void; onRemove: (id: string) => void }) {
   return (
     <div className="space-y-4">
       {files.map((file) => (
         <Card key={file.id}>
           <CardHeader><CardTitle>{file.name}</CardTitle><CardDescription>Configure como os lançamentos desta planilha devem sair no TXT e confira as primeiras linhas lidas.</CardDescription></CardHeader>
           <CardContent className="space-y-5">
-            <FileSettings files={[file]} setFiles={(updated) => setFiles(files.map((item) => item.id === file.id ? updated[0] : item))} />
+            <FileSettings files={[file]} setFiles={(updated) => setFiles(files.map((item) => item.id === file.id ? updated[0] : item))} onRemove={onRemove} />
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
                 <div className="text-xs font-semibold uppercase text-slate-500">Dias com saldo</div>
@@ -429,6 +449,22 @@ export default function App() {
     setState("uploaded");
   };
 
+  const removeFile = (id: string) => {
+    const nextFiles = files.filter((file) => file.id !== id);
+    setFiles(nextFiles);
+    setEntries(buildEntries(nextFiles));
+    if (!nextFiles.length) setState("empty");
+  };
+
+  const clearFiles = () => {
+    setFiles([]);
+    setEntries([]);
+    setState("empty");
+    setTxtGenerated(false);
+    setTxtContent("");
+    setSavedPath("");
+  };
+
   const confirmMapping = () => {
     setState("processing");
     setTimeout(() => { setEntries(buildEntries(files)); setState("success"); setCurrent("review"); }, 500);
@@ -492,8 +528,8 @@ export default function App() {
         <div className="min-h-0 flex-1 space-y-5 overflow-auto p-6">
           <Stepper current={current} />
           {current === "dashboard" && <div className="space-y-5"><SummaryCards entries={entries} files={files} /><Card><CardHeader><CardTitle>Importar planilha</CardTitle><CardDescription>Comece adicionando uma ou mais planilhas. Cada arquivo pode ter contas e complemento proprios.</CardDescription></CardHeader><CardContent className="flex items-center justify-between"><div><p className="text-sm text-slate-600">Ultimo processamento: {files.length ? (state === "txt" ? "TXT gerado com sucesso" : "Arquivo pronto para conferencia") : "Nenhum arquivo importado"}</p><p className="mt-1 text-sm font-semibold text-slate-900">{entries.length} lancamentos - {currency(total)}</p></div><Button onClick={() => setCurrent("import")}><Upload className="h-4 w-4" />Importar planilha</Button></CardContent></Card></div>}
-          {current === "import" && <div className="space-y-5"><UploadBox onSelectFiles={selectFiles} />{files.length > 0 ? <FileSettings files={files} setFiles={setFiles} /> : <Card><CardContent className="p-6 text-sm text-slate-500">Nenhuma planilha selecionada ainda.</CardContent></Card>}<div className="flex justify-end"><Button disabled={files.length === 0} onClick={() => setCurrent("mapping")}>Continuar para mapeamento</Button></div></div>}
-          {current === "mapping" && <div className="space-y-5">{files.length > 0 ? <MappingColumns files={files} setFiles={setFiles} /> : <Card><CardContent className="p-6 text-sm text-slate-500">Importe uma planilha antes de mapear as colunas.</CardContent></Card>}<div className="flex justify-end"><Button disabled={files.length === 0} onClick={confirmMapping}><CheckCircle2 className="h-4 w-4" />Confirmar mapeamento</Button></div></div>}
+          {current === "import" && <div className="space-y-5"><UploadBox onSelectFiles={selectFiles} />{files.length > 0 ? <><div className="flex justify-end"><Button variant="outline" size="sm" onClick={clearFiles}><X className="h-4 w-4" />Limpar planilhas</Button></div><FileSettings files={files} setFiles={setFiles} onRemove={removeFile} /></> : <Card><CardContent className="p-6 text-sm text-slate-500">Nenhuma planilha selecionada ainda.</CardContent></Card>}<div className="flex justify-end"><Button disabled={files.length === 0} onClick={() => setCurrent("mapping")}>Continuar para mapeamento</Button></div></div>}
+          {current === "mapping" && <div className="space-y-5">{files.length > 0 ? <><div className="flex justify-end"><Button variant="outline" size="sm" onClick={clearFiles}><X className="h-4 w-4" />Limpar planilhas</Button></div><MappingColumns files={files} setFiles={setFiles} onRemove={removeFile} /></> : <Card><CardContent className="p-6 text-sm text-slate-500">Importe uma planilha antes de mapear as colunas.</CardContent></Card>}<div className="flex justify-end"><Button disabled={files.length === 0} onClick={confirmMapping}><CheckCircle2 className="h-4 w-4" />Confirmar mapeamento</Button></div></div>}
           {current === "review" && <div className="space-y-5"><ErrorAlert errors={errors} /><AccountingEntryTable entries={entries} setEntries={setEntries} /><div className="flex justify-end"><Button onClick={() => setCurrent("export")}>Ir para geracao do TXT</Button></div></div>}
           {current === "export" && <div className="space-y-5"><ErrorAlert errors={errors} /><SummaryCards entries={entries} files={files} /><Card><CardHeader><CardTitle>Resumo final</CardTitle><CardDescription>Confira os totais antes de salvar o TXT SCI.</CardDescription></CardHeader><CardContent className="flex flex-wrap items-center gap-3"><ExportTxtButton disabled={errors > 0} generated={txtGenerated} onClick={generateTxt} /><Button variant="outline" disabled={errors > 0 || entries.length === 0} onClick={downloadTxt}><Download className="h-4 w-4" />Baixar TXT</Button><Button variant="secondary" onClick={() => setCurrent("review")}><Pencil className="h-4 w-4" />Voltar para corrigir</Button>{txtGenerated && <span className="text-sm font-semibold text-emerald-700">TXT gerado com sucesso.</span>}{savedPath && <span className="text-xs text-slate-500">Salvo em: {savedPath}</span>}</CardContent></Card></div>}
         </div>

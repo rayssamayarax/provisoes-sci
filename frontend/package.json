@@ -1,6 +1,6 @@
 {
   "name": "contaflow",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ContaFlow - programa desktop para gerar TXT SCI de provisoes",
   "author": "Rayssa",
   "main": "electron/main.cjs",
