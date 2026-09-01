@@ -43,6 +43,7 @@ function createWindow() {
     minWidth: 1080,
     minHeight: 700,
     title: "Provisoes SCI",
+    icon: path.join(__dirname, "..", isDev ? "public" : "dist", "icon.ico"),
     backgroundColor: "#f4f7fb",
     autoHideMenuBar: true,
     webPreferences: {

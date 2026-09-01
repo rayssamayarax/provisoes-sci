@@ -1,6 +1,6 @@
 {
   "name": "provisoes-sci",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Programa desktop para gerar TXT SCI de provisoes",
   "author": "Rayssa",
   "main": "electron/main.cjs",
@@ -53,6 +53,7 @@
       "target": [
         "nsis"
       ],
+      "icon": "build/icon.ico",
       "signAndEditExecutable": false
     },
     "nsis": {
@@ -61,6 +62,8 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
       "artifactName": "Provisoes-SCI-Setup-${version}.exe"
     },
     "forceCodeSigning": false,
