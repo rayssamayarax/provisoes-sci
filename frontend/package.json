@@ -1,6 +1,6 @@
 {
   "name": "contaflow",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "ContaFlow - programa desktop para gerar TXT SCI de provisoes",
   "author": "Rayssa",
   "main": "electron/main.cjs",
@@ -35,6 +35,7 @@
     "electron": "^42.1.0",
     "electron-builder": "^26.8.1",
     "postcss": "^8.4.49",
+    "resedit": "^1.7.2",
     "tailwindcss": "^3.4.17",
     "wait-on": "^9.0.10"
   },
@@ -49,6 +50,7 @@
       "electron/**/*",
       "package.json"
     ],
+    "afterPack": "scripts/afterPack.cjs",
     "win": {
       "target": [
         "nsis"
